@@ -1,0 +1,14 @@
+{
+  "name": "status-message-browser",
+  "version": "0.0.1",
+  "private": true,
+  "devDependencies": {
+    "shadow-cljs": "2.8.26"
+  },
+  "dependencies": {
+    "@erebos/swarm-browser": "0.7.0",
+    "create-react-class": "^15.6.3",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  }
+}
