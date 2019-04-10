@@ -5,7 +5,7 @@ geth account new
 
 run geth and swarm with your account
 ```
-./go/bin/geth --rpc --rpcapi "db,eth,net,web3,personal" --syncmode=light --password <(echo password) --unlock 63410f8acabd08648c9230be91f87a24e7871616 --cache=4096 --ws --wsport 8546 --wsorigins "*"
+./go/bin/geth --rpc --wsapi "db,eth,net,web3,personal" --syncmode=light --password <(echo password) --unlock 63410f8acabd08648c9230be91f87a24e7871616 --cache=4096 --ws --wsport 8546 --wsorigins "*"
 
 
 ./go/bin/swarm --ens-api $HOME/.ethereum/geth.ipc --bzzaccount 63410f8acabd08648c9230be91f87a24e7871616 --corsdomain '*' --password <(echo password)
