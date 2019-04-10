@@ -1,9 +1,23 @@
 (ns app.main
   (:require ["@erebos/swarm-browser" :as SwarmClient]
+            ["web3" :as Web3]
+            ["@erebos/keccak256" :refer [pubKeyToAddress]]
+            ["@erebos/secp256k1" :refer [createKeyPair sign]]
             [reagent.core :as reagent]
             [clojure.edn :as edn]))
 
-(def bzz (SwarmClient/BzzAPI. #js {:url "http://localhost:8500"}))
+(def web3 (Web3/Web3 "http://localhost:8546" nil #js
+                     {:defaultAccount "0x63410f8acabd08648c9230be91f87a24e7871616"}))
+
+(def keypair (createKeyPair))
+(def user (pubKeyToAddress (-> keypair .getPublic .encode)))
+
+(defn sign-bytes [bytes]
+  (js/Promise. (fn [bytes]
+                 (sign bytes (.getPrivate keypair)))))
+
+(def bzz (SwarmClient/BzzAPI. #js {:url "http://localhost:8500"
+                                   :signBytes sign-bytes}))
 
 (def content (reagent/atom nil))
 (def contenthash (reagent/atom "ad449d6934bc7481533f456b4eb59522cd514e16d7fee1c0c07ec06452e46951"))
@@ -40,5 +54,43 @@
      ^{:key content}[message-view content])])
 
 (defn main! []
-(reagent/render [home-page]
-                (.getElementById js/document "app")))
+  (reagent/render [home-page]
+                  (.getElementById js/document "app")))
+
+(def feedhash (atom nil))
+
+
+#_(defn upload-feed-value [feedhash data]
+    (.then (.uploadFeedValue bzz
+                             feedhash
+                             #js {"index.htlm" {:contentType "text/html"
+                                                :data data}}
+                             #js {:defaultPath "index.html"})
+           (fn [res]
+             (.log js/console res))))
+
+#_(defn update-feed-value [feedhash data]
+    (.then (.updateFeedValue bzz
+                             feedhash
+                             data)
+           (fn [res]
+             (.log js/console res))))
+
+(defn upload-feed-value [feedhash data]
+  (.then (.uploadFeedValue bzz
+                           feedhash
+                           data)
+         (fn [res]
+           (.log js/console res))))
+
+(defn create-feed [name]
+  (.then (.createFeedManifest bzz
+                              #js {:name name
+                                   :user user})
+         (fn [hash]
+           (reset! feedhash hash)
+           (println "feedhash: " (.getFeedURL bzz hash))
+           (upload-feed-value hash "potatoe potatoe"))))
+
+(println user)
+(create-feed "hello")
