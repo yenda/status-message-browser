@@ -6,8 +6,7 @@
             [reagent.core :as reagent]
             [clojure.edn :as edn]))
 
-(def web3 (Web3/Web3 "http://localhost:8546" nil #js
-                     {:defaultAccount "0x63410f8acabd08648c9230be91f87a24e7871616"}))
+(def web3 (Web3. "ws://127.0.0.1:8546"))
 
 (def keypair (createKeyPair))
 (def user (pubKeyToAddress (-> keypair .getPublic .encode)))
@@ -94,3 +93,5 @@
 
 (println user)
 (create-feed "hello")
+
+#_(.then (-> web3 .-eth .-personal (.sign "hello" "0x63410f8acabd08648c9230be91f87a24e7871616" "password")) println)
