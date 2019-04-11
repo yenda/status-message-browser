@@ -6,10 +6,14 @@
     "shadow-cljs": "2.8.26"
   },
   "dependencies": {
+    "@erebos/api-bzz-node": "^0.7.0",
+    "@erebos/keccak256": "^0.7.0",
     "@erebos/secp256k1": "^0.7.0",
     "@erebos/swarm-browser": "0.7.0",
     "bytes": "^3.1.0",
     "create-react-class": "^15.6.3",
+    "erebos": "^0.3.0",
+    "esm": "^3.2.22",
     "eth-lib": "^0.2.8",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
